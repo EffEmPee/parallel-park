@@ -12,12 +12,18 @@
 #include "queue.h"
 #include "shared.h"
 
-pthread_mutex_t gate_queue_mutex_client;
+
+void *enjoy(void *arg);
+void buy_coins(client_t *self);
+void wait_ticket(client_t *self);
+void queue_enter(client_t *self);
 
 // Thread que implementa o fluxo do cliente no parque.
 void *enjoy(void *arg){
 
-    queue_enter(arg);
+    client_t* client = (client_t*) arg;
+
+    queue_enter(client);
 
     // TODO
 
@@ -33,15 +39,15 @@ void buy_coins(client_t *self){
 
 // Função onde o cliente espera a liberacao da bilheteria para adentrar ao parque.
 void wait_ticket(client_t *self){
-    // TODO
+    // sem_wait(&queue_sem);
 }
 
 // Funcao onde o cliente entra na fila da bilheteria
 void queue_enter(client_t *self){
     // Protege o acesso a fila para adicionar um client
-    pthread_mutex_lock(&gate_queue_mutex_client);
+    pthread_mutex_lock(&gate_queue_mutex);
     enqueue(gate_queue, self->id);
-    pthread_mutex_unlock(&gate_queue_mutex_client);
+    pthread_mutex_unlock(&gate_queue_mutex);
 
     debug("[WAITING] - Turista [%d] entrou na fila do portao principal\n", self->id);
 
@@ -56,8 +62,7 @@ void queue_enter(client_t *self){
 
 // Essa função recebe como argumento informações sobre o cliente e deve iniciar os clientes.
 void open_gate(client_args *args){
-    // Inicialização do mutex de fila e criação das threads de cada client
-    pthread_mutex_init(&gate_queue_mutex_client, NULL);
+    // Inicialização do mutex de fila e criação das threads de ca
     pthread_t id_thread[args->n];
     for (int i = 0; i < args->n; ++i)
     {
@@ -67,5 +72,5 @@ void open_gate(client_args *args){
 
 // Essa função deve finalizar os clientes
 void close_gate(){
-    pthread_mutex_destroy(&gate_queue_mutex_client);
+    // TODO
 }

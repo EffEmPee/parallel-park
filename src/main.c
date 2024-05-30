@@ -18,12 +18,16 @@
 void init_main_queue()
 {
     gate_queue = create_queue();
+    pthread_mutex_init(&gate_queue_mutex, NULL);
+    sem_init(&queue_sem, 0, 0);
 }
 
 // Destroi a fila
 void destroy_main_queue()
 {
     destroy_queue(gate_queue);
+    pthread_mutex_destroy(&gate_queue_mutex);
+    sem_destroy(&queue_sem);
 }
 
 // Inicia a instância dos clientes

@@ -5,7 +5,8 @@
 
 // Você pode declarar novas funções (ou variaveis compartilhadas) aqui
 
-
+extern pthread_mutex_t gate_queue_mutex;
+extern sem_t queue_sem;
 
 /**********************************
  *          ATENÇÃO               *
