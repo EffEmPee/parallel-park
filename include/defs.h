@@ -11,9 +11,9 @@
 #define FALSE 0             // e FALSE para False (como no Python).
 
 
-#define MAX_CAPACITY_TOY    10  // Capacidade maxima dos brinquedos.
-#define MIN_CAPACITY_TOY    5   // Capacidade minima dos brinquedos.
-#define MAX_COINS           20  // Maximo de moedas que um cliente pode comprar
+#define MAX_CAPACITY_TOY    3  // Capacidade maxima dos brinquedos.
+#define MIN_CAPACITY_TOY    1   // Capacidade minima dos brinquedos.
+#define MAX_COINS           3  // Maximo de moedas que um cliente pode comprar
 
 #define DEBUG               1   //  Alterne (0 or 1) essa macro se voce espera desabilitar todas as mensagens de debug.
 
@@ -29,6 +29,8 @@ typedef struct toy{
   int id;                   // O id de um brinquedo.
   int capacity;             // A capacidade total de um brinquedo.
   pthread_t thread;         // A thread de um brinquedo.
+  sem_t queue_sem;
+  sem_t enjoy_sem;
 } toy_t;
 
 /* Adicione as estruturas de sincronização que achar necessárias */
@@ -37,6 +39,7 @@ typedef struct client{
   int coins;                // Quantidade de moedas do cliente.
   int number_toys;          // Numero de brinquedos disponiveis.
   toy_t **toys;             // (Copy) Array de brinquedos.
+  pthread_t thread;
 } client_t;
 
 /* Adicione as estruturas de sincronização que achar necessárias */
