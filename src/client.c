@@ -31,9 +31,13 @@ void *enjoy(void *arg)
     {
         toy_t *toy = client->toys[rand() % client->number_toys];
 
-        sem_post(&toy->queue_sem);
+        sem_wait(&toy->waiting_for_toy_sem);
+        toy->waiting_for_toy++;
+        sem_post(&toy->waiting_for_toy_sem);
         debug("Turista [%d] entrou na fila do brinquedo [%d].\n", client->id, toy->id);
+        // preempção está causando os turistas pararem aqui, o que permite o mesmo turista passar +1x pela mesma exec do brinquedo
         sem_wait(&toy->enjoy_sem);
+        sem_post(&toy->waiting_for_toy_sem);
         debug("Turista [%d] brincou no brinquedo [%d].\n", client->id, toy->id);
         client->coins--;
     }

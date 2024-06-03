@@ -36,20 +36,30 @@ void *turn_on(void *args)
 
         // debug("Início execução brinquedo [%d].\n", toy->id);
 
-        sem_getvalue(&toy->queue_sem, &waiting_for_toy);
+        // sem_getvalue(&toy->queue_sem, &waiting_for_toy);
+
+        sem_wait(&toy->waiting_for_toy_sem);
+
+        waiting_for_toy = toy->waiting_for_toy;
 
         if (waiting_for_toy > toy->capacity)
             waiting_for_toy = toy->capacity;
 
+        if (!waiting_for_toy)
+            continue;
+
         debug("Brinquedo %d funcionando com %d turistas.\n", toy->id, waiting_for_toy);
+
+        // sleep(3);
 
         for (int i = 0; i < waiting_for_toy; i++)
         {
-            sem_wait(&toy->queue_sem);
+            // sem_wait(&toy->queue_sem);
             sem_post(&toy->enjoy_sem);
+            sem_wait(&toy->waiting_for_toy_sem);
         }
-
-        sem_post(&toy->enjoy_sem);
+        toy->waiting_for_toy -= waiting_for_toy;
+        sem_post(&toy->waiting_for_toy_sem);
 
         debug("Término execução brinquedo [%d].\n", toy->id);
     }

@@ -55,7 +55,7 @@ toy_t **init_toys(int number)
         toys[i] = (toy_t *)malloc(sizeof(toy_t));
         toys[i]->id = i + 1;
         toys[i]->capacity = 2; // rand() % (MAX_CAPACITY_TOY - 1) + MIN_CAPACITY_TOY;
-        sem_init(&toys[i]->queue_sem, 0, 0);
+        sem_init(&toys[i]->waiting_for_toy_sem, 0, 1);
         sem_init(&toys[i]->enjoy_sem, 0, 0);
     }
     return toys;
@@ -89,7 +89,7 @@ void finish_toys(toy_t **toys, int number_toys)
 {
     for (int i = 0; i < number_toys; i++)
     {
-        sem_destroy(&toys[i]->queue_sem);
+        sem_destroy(&toys[i]->waiting_for_toy_sem);
         sem_destroy(&toys[i]->enjoy_sem);
         free(toys[i]);
     }
