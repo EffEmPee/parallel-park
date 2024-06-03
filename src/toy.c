@@ -46,7 +46,10 @@ void *turn_on(void *args)
             waiting_for_toy = toy->capacity;
 
         if (!waiting_for_toy)
+        {
+            sem_post(&toy->waiting_for_toy_sem);
             continue;
+        }
 
         debug("Brinquedo %d funcionando com %d turistas.\n", toy->id, waiting_for_toy);
 

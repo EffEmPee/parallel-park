@@ -53,7 +53,7 @@ void *enjoy(void *arg)
 void buy_coins(client_t *self)
 {
     // Adiciona um número aleatório de moedas, repeitando o máximo
-    self->coins = rand() % MAX_COINS;
+    self->coins = rand() % MAX_COINS + 1;
 }
 
 // Função onde o cliente espera a liberacao da bilheteria para adentrar ao parque.

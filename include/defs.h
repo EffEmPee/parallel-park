@@ -10,9 +10,9 @@
 #define TRUE 1  // Em C nao temos True ou False (como no Python). Usamos macro TRUE para True (como no Python).
 #define FALSE 0 // e FALSE para False (como no Python).
 
-#define MAX_CAPACITY_TOY 3 // Capacidade maxima dos brinquedos.
-#define MIN_CAPACITY_TOY 1 // Capacidade minima dos brinquedos.
-#define MAX_COINS 3        // Maximo de moedas que um cliente pode comprar
+#define MAX_CAPACITY_TOY 10 // Capacidade maxima dos brinquedos.
+#define MIN_CAPACITY_TOY 2  // Capacidade minima dos brinquedos.
+#define MAX_COINS 10        // Maximo de moedas que um cliente pode comprar
 
 #define DEBUG 1 //  Alterne (0 or 1) essa macro se voce espera desabilitar todas as mensagens de debug.
 
