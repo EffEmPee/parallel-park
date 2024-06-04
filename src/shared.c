@@ -4,6 +4,7 @@
 
 // Você pode declarar novas funções (ou variaveis compartilhadas) aqui
 
+// Inicialização das variáveis ja descritas no arquivo shared.h
 pthread_mutex_t gate_queue_mutex = PTHREAD_MUTEX_INITIALIZER;
 sem_t *toys_sem;
 sem_t queue_sem;

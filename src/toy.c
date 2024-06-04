@@ -32,6 +32,7 @@ void *turn_on(void *args)
         }
         pthread_mutex_unlock(&park_remain_mutex);
 
+        // TODO: substituir por uma constante
         sleep(3); // Espera por clientes chegarem
 
         // debug("Início execução brinquedo [%d].\n", toy->id);
@@ -74,7 +75,10 @@ void *turn_on(void *args)
 // Essa função recebe como argumento informações e deve iniciar os brinquedos.
 void open_toys(toy_args *args)
 {
+    // Args em uma variável global para poder ser usada em outras funções
     toys_data = args;
+
+    // Criação das threads dos brinquedos
     for (int i = 0; i < args->n; ++i)
     {
         pthread_create(&args->toys[i]->thread, NULL, turn_on, (void *)args->toys[i]);
@@ -84,6 +88,7 @@ void open_toys(toy_args *args)
 // Desligando os brinquedos
 void close_toys()
 {
+    // Join nas threads dos brinquedos
     for (int i = 0; i < toys_data->n; ++i)
     {
         pthread_join(toys_data->toys[i]->thread, NULL);

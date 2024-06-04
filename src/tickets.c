@@ -16,7 +16,9 @@ static tickets_args *tickets_data = NULL;
 // Thread que implementa uma bilheteria
 void *sell(void *args)
 {
+    // Typecasting
     ticket_t *ticket = (ticket_t *)args;
+
     debug("[INFO] - Bilheteria [%d] Abriu!\n", ticket->id);
 
     while (1)
@@ -42,7 +44,10 @@ void *sell(void *args)
 // Essa função recebe como argumento informações sobre a bilheteria e deve iniciar os atendentes.
 void open_tickets(tickets_args *args)
 {
+    // Args em uma variável global para poder ser usada em outras funções
     tickets_data = args;
+
+    // Criação das threads das bilheterias
     for (int i = 0; i < args->n; ++i)
     {
         pthread_create(&args->tickets[i]->thread, NULL, sell, (void *)args->tickets[i]);
@@ -52,6 +57,7 @@ void open_tickets(tickets_args *args)
 // Essa função deve finalizar a bilheteria
 void close_tickets()
 {
+    // Join nas threads das bilheterias
     for (int i = 0; i < tickets_data->n; ++i)
     {
         pthread_join(tickets_data->tickets[i]->thread, NULL);

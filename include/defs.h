@@ -11,8 +11,8 @@
 #define FALSE 0 // e FALSE para False (como no Python).
 
 #define MAX_CAPACITY_TOY 10 // Capacidade maxima dos brinquedos.
-#define MIN_CAPACITY_TOY 2  // Capacidade minima dos brinquedos.
-#define MAX_COINS 10        // Maximo de moedas que um cliente pode comprar
+#define MIN_CAPACITY_TOY 5  // Capacidade minima dos brinquedos.
+#define MAX_COINS 20        // Maximo de moedas que um cliente pode comprar
 
 #define DEBUG 1 //  Alterne (0 or 1) essa macro se voce espera desabilitar todas as mensagens de debug.
 
@@ -26,22 +26,22 @@ typedef struct ticket
 /* Adicione as estruturas de sincronização que achar necessárias */
 typedef struct toy
 {
-  int id;           // O id de um brinquedo.
-  int capacity;     // A capacidade total de um brinquedo.
-  pthread_t thread; // A thread de um brinquedo.
-  int waiting_for_toy;
-  sem_t waiting_for_toy_sem;
-  sem_t enjoy_sem;
+  int id;                    // O id de um brinquedo.
+  int capacity;              // A capacidade total de um brinquedo.
+  pthread_t thread;          // A thread de um brinquedo.
+  int waiting_for_toy;       // Quantos clientes estão esperando para usar o brinquedo
+  sem_t waiting_for_toy_sem; // Semáforo de controle de quantos clientes estão esperando para usar o brinquedo
+  sem_t enjoy_sem;           // Semáforo de sincronização da entrada de clientes no brinquedo
 } toy_t;
 
 /* Adicione as estruturas de sincronização que achar necessárias */
 typedef struct client
 {
-  int id;          // O id do cliente.
-  int coins;       // Quantidade de moedas do cliente.
-  int number_toys; // Numero de brinquedos disponiveis.
-  toy_t **toys;    // (Copy) Array de brinquedos.
-  pthread_t thread;
+  int id;           // O id do cliente.
+  int coins;        // Quantidade de moedas do cliente.
+  int number_toys;  // Numero de brinquedos disponiveis.
+  toy_t **toys;     // (Copy) Array de brinquedos.
+  pthread_t thread; // A thread de um cliente
 } client_t;
 
 /* Adicione as estruturas de sincronização que achar necessárias */

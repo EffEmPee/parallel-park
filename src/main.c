@@ -18,7 +18,11 @@
 void init_main_queue()
 {
     gate_queue = create_queue();
+
+    // Inicia o mutex da fila do portão principal
     pthread_mutex_init(&gate_queue_mutex, NULL);
+
+    // Inicia o semáforo de sincronização da fila do portão principal
     sem_init(&queue_sem, 0, 0);
 }
 
@@ -26,7 +30,11 @@ void init_main_queue()
 void destroy_main_queue()
 {
     destroy_queue(gate_queue);
+
+    // Destroi o mutex da fila do portão principal
     pthread_mutex_destroy(&gate_queue_mutex);
+
+    // Destroi o semáforo de sincronização da fila do portão principal
     sem_destroy(&queue_sem);
 }
 
@@ -54,8 +62,12 @@ toy_t **init_toys(int number)
     {
         toys[i] = (toy_t *)malloc(sizeof(toy_t));
         toys[i]->id = i + 1;
-        toys[i]->capacity = 2; // rand() % (MAX_CAPACITY_TOY - 1) + MIN_CAPACITY_TOY;
+        toys[i]->capacity = rand() % (MAX_CAPACITY_TOY - 1) + MIN_CAPACITY_TOY;
+
+        // Inicia o semáforo da fila do brinquedo
         sem_init(&toys[i]->waiting_for_toy_sem, 0, 1);
+
+        // Inicia o semáforo de entrada do brinquedo
         sem_init(&toys[i]->enjoy_sem, 0, 0);
     }
     return toys;
@@ -89,8 +101,10 @@ void finish_toys(toy_t **toys, int number_toys)
 {
     for (int i = 0; i < number_toys; i++)
     {
+        // Destroi os semáforos criados no construtor
         sem_destroy(&toys[i]->waiting_for_toy_sem);
         sem_destroy(&toys[i]->enjoy_sem);
+
         free(toys[i]);
     }
     free(toys);
