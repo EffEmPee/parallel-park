@@ -17,13 +17,17 @@ static toy_args *toys_data = NULL;
 // Thread que o brinquedo vai usar durante toda a simulacao do sistema
 void *turn_on(void *args)
 {
+    // Typecasting
     toy_t *toy = (toy_t *)args;
-    debug("[ON] - O brinquedo  [%d] foi ligado.\n", toy->id); // Altere para o id do brinquedo
+
+    debug("[ON] - O brinquedo  [%d] foi ligado.\n", toy->id);
 
     int waiting_for_toy;
 
     while (TRUE)
     {
+
+        // Verifica se tem alguem no parque
         pthread_mutex_lock(&park_remain_mutex);
         if (park_remain < 0)
         {
@@ -32,20 +36,20 @@ void *turn_on(void *args)
         }
         pthread_mutex_unlock(&park_remain_mutex);
 
-        // TODO: substituir por uma constante
-        sleep(3); // Espera por clientes chegarem
+        // Espera por clientes chegarem
+        sleep(3);
 
-        // debug("Início execução brinquedo [%d].\n", toy->id);
-
-        // sem_getvalue(&toy->queue_sem, &waiting_for_toy);
-
+        // Verifica se tem alguem na fila do brinquedo
         sem_wait(&toy->waiting_for_toy_sem);
 
+        // brinquedo passa quantidade de turistas na fila do brinquedo para a variável local
         waiting_for_toy = toy->waiting_for_toy;
 
+        // Limita a capacidade do brinquedo
         if (waiting_for_toy > toy->capacity)
             waiting_for_toy = toy->capacity;
 
+        // Se não tiver ninguém na fila, libera o semáforo e continua esperando
         if (!waiting_for_toy)
         {
             sem_post(&toy->waiting_for_toy_sem);
@@ -54,20 +58,20 @@ void *turn_on(void *args)
 
         debug("Brinquedo %d funcionando com %d turistas.\n", toy->id, waiting_for_toy);
 
-        // sleep(3);
-
+        // Libera os turistas do brinquedo
         for (int i = 0; i < waiting_for_toy; i++)
         {
-            // sem_wait(&toy->queue_sem);
             sem_post(&toy->enjoy_sem);
             sem_wait(&toy->waiting_for_toy_sem);
         }
+
+        // tira os turistas da fila do brinquedo
         toy->waiting_for_toy -= waiting_for_toy;
         sem_post(&toy->waiting_for_toy_sem);
 
         debug("Término execução brinquedo [%d].\n", toy->id);
     }
-    debug("[OFF] - O brinquedo [%d] foi desligado.\n", toy->id); // Altere para o id do brinquedo
+    debug("[OFF] - O brinquedo [%d] foi desligado.\n", toy->id);
 
     pthread_exit(NULL);
 }
